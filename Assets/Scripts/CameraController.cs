@@ -4,70 +4,84 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour 
-{
-    private bool _NeedShift = false;
-	BoxCollider2D bc;
-	Transform bgi;
-	//private Vector2 bg_shift;
+{   
+    public Vector2 speed = new Vector2(0.1f, 0.1f); //must be positive
+    public int steps = 5; //за сколько шагов сдвигать камеру
 
-    public GameObject target = null; //set to "PlayerStar" manually in Unity
+    BoxCollider2D bc; //camera collider
+    Transform tr;
+
+    GameObject target; //object to follow
+    Transform target_tr;
+
+    Vector2 shift = Vector2.zero;
+
 
     void Start () 
     {
-		bc = this.GetComponent<BoxCollider2D> ();
-		bgi = transform.Find ("Background_Image");
+        /*
+        if (target == null) //ustarelo since I made spawnpoints
+        {
+            Debug.LogErrorFormat("{0}: no target selected in CameraController");
+            enabled = false;
+            return;
+        }
+        */
+		bc = GetComponent<BoxCollider2D> ();
+        tr = transform;
+        
 		
-		//camera visible rectangle - update collider2d size
+		//camera visible area rectangle - update collider2d size
 		Vector2 cam_size = new Vector2 (Camera.main.orthographicSize * Camera.main.aspect * 2, Camera.main.orthographicSize * 2);
-		bc.size = new Vector2 (cam_size.x * 0.07f, cam_size.y * 0.07f);
+		bc.size = new Vector2 (cam_size.x * 0.07f, cam_size.y * 0.07f);        
+    }
+
+    public void SetTarget(GameObject t)
+    {
+        target = t;
+        target_tr = target.transform;
+        //make camera centered at player
+        tr.position = target_tr.position;
     }
 
     void FixedUpdate () 
-    {
-		if (_NeedShift)
+    {        
+        if (target == null)
+            return;
+
+        shift = Vector2.zero;
+
+        if (!bc.OverlapPoint(target_tr.position))
         {
-            Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
-            Vector2 d = target.transform.position - this.transform.position;
-            Vector3 delta = Vector3.zero;
+            Vector2 delta;
 
-            if (Math.Sign(rb.velocity.x) == Math.Sign(d.x))
-            {
-                delta.x = rb.velocity.x/60;
-            }
-            if (Math.Sign(rb.velocity.y) == Math.Sign(d.y))
-            {
-                delta.y = rb.velocity.y/60;
-            }
+            delta = (Vector2)target_tr.position - bc.ClosestPoint(target_tr.position);
 
-            this.transform.position += delta;
-			bgi.localPosition -= delta / 20;
+            /*
+            //приближение к таргету фиксированными шагами (не подходит для этой игры)
+            shift = new Vector2
+            (
+                Mathf.Min(Mathf.Abs(delta.x), speed.x) * Mathf.Sign(delta.x),
+                Mathf.Min(Mathf.Abs(delta.y), speed.y) * Mathf.Sign(delta.y)
+            );
+            */
 
-			if ( Mathf.Abs(bgi.localPosition.x) > 10.24f)
-				bgi.Translate(10.24f * -Mathf.Sign(bgi.localPosition.x), 0, 0);
-			if ( Mathf.Abs(bgi.localPosition.y) > 7.68f)
-				bgi.Translate(0,  7.68f * -Mathf.Sign(bgi.localPosition.y), 0);
+            if (Math.Abs(delta.x) < speed.x)             
+                shift.x = delta.x;
+            else
+                shift.x = delta.x / steps;
+            if (Math.Abs(delta.y) < speed.y)
+                shift.y = delta.y;
+            else
+                shift.y = delta.y / steps;            
         }
-
-		if (_NeedShift == false)
-			_NeedShift = true;
     }
 
-    void OnTriggerEnter2D(Collider2D coll)
+    void LateUpdate()
     {
-		
-    }
+        if (target == null)
+            return;
 
-    void OnTriggerStay2D(Collider2D coll)
-    {
-		if (coll.tag == "PlayerCenterPoint") 
-			_NeedShift = false;
+        tr.position += (Vector3)shift * Time.timeScale;
     }
-
-    void OnTriggerExit2D(Collider2D coll)
-    {
-		if (coll.tag == "PlayerCenterPoint") 
-			_NeedShift = true;
-    }
-
- 
 }

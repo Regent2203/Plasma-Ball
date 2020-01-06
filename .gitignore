@@ -1,5 +1,6 @@
 /[Ll]ibrary/
 /[Pp]ackages/
+/[Oo]bj/
 *.csproj
 *.sln
 *.userprefs

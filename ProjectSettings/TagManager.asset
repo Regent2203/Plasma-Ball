@@ -4,9 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PlayerCenterPoint
   - StartArea
   - Item
+  - Wall
+  - PlayerCenterPoint
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Players
   - Enviroment
   - Enemies
-  - 
+  - Items
   - 
   - 
   - 

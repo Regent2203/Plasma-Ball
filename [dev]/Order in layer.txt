@@ -1,0 +1,9 @@
+Wall - 20
+Slow/Gravity Area - 19
+Player - 15 
+ player dash target effect - 14
+ player particles - 06
+
+Item - 13
+CheckPoint - 06
+BG Panel - 05
