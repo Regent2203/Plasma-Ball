@@ -8,31 +8,23 @@ public class CameraController : MonoBehaviour
     public Vector2 speed = new Vector2(0.1f, 0.1f); //must be positive
     public int steps = 5; //за сколько шагов сдвигать камеру
 
-    BoxCollider2D bc; //camera collider
     Transform tr;
+    BoxCollider2D bc; //camera collider    
+    public Camera cam { get; protected set; }
 
     GameObject target; //object to follow
-    Transform target_tr;
-
-    Vector2 shift = Vector2.zero;
+    Transform target_tr;    
 
 
-    void Start () 
+    void Start() 
     {
-        /*
-        if (target == null) //ustarelo since I made spawnpoints
-        {
-            Debug.LogErrorFormat("{0}: no target selected in CameraController");
-            enabled = false;
-            return;
-        }
-        */
-		bc = GetComponent<BoxCollider2D> ();
         tr = transform;
+        bc = GetComponent<BoxCollider2D> ();        
+        cam = GetComponent<Camera>();
         
 		
 		//camera visible area rectangle - update collider2d size
-		Vector2 cam_size = new Vector2 (Camera.main.orthographicSize * Camera.main.aspect * 2, Camera.main.orthographicSize * 2);
+		Vector2 cam_size = new Vector2 (cam.orthographicSize * cam.aspect * 2, cam.orthographicSize * 2);
 		bc.size = new Vector2 (cam_size.x * 0.07f, cam_size.y * 0.07f);        
     }
 
@@ -44,7 +36,10 @@ public class CameraController : MonoBehaviour
         tr.position = target_tr.position;
     }
 
-    void FixedUpdate () 
+    Vector2 shift;
+    Vector2 delta;
+
+    void FixedUpdate() 
     {        
         if (target == null)
             return;
@@ -52,9 +47,7 @@ public class CameraController : MonoBehaviour
         shift = Vector2.zero;
 
         if (!bc.OverlapPoint(target_tr.position))
-        {
-            Vector2 delta;
-
+        {            
             delta = (Vector2)target_tr.position - bc.ClosestPoint(target_tr.position);
 
             /*

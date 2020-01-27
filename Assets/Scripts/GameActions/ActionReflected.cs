@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ActionReflected : GameAction
 {
@@ -8,6 +6,8 @@ public class ActionReflected : GameAction
     //
     [Header("Audio")]
     public AudioClip sound;
+
+
 
     override protected void Awake()
     {
@@ -17,6 +17,7 @@ public class ActionReflected : GameAction
     override protected void StartCustom() //start
     {
         ac_max = 43;
+        Breakable = false;
     }
 
     override protected void ProcessCustom() //fixed update
@@ -24,58 +25,36 @@ public class ActionReflected : GameAction
         switch (ac)
         {
             //43..0
-            case 42:
-            {
-                //ps.Emit(10);
-                break;
-            }
-            case 31:
-            {
-                Breakable = true;
-                break;
-            }
             default: //case 30..3
             {
                 if ((ac >= 3) && (ac <= 30))
                     pl.Speed *= 0.93f;
 
                 break;
-            }            
-            case 0:
+            }
+            case 2:
             {
                 pl.Speed = Vector2.zero;
+                break;
+            }
+            case 0:
+            {
                 Deactivate();
                 pl.PerformDefaultAction();
                 break;
             }
-        }
-
-    /*
-    Vector2 refl = new Vector2
-        (
-        ReflectPower * Mathf.Cos(Mathf.Atan2(coll.transform.position.y - coll.contacts[0].point.y, coll.transform.position.x - coll.contacts[0].point.x) + ReflectAngle),
-        ReflectPower * Mathf.Sin(Mathf.Atan2(coll.transform.position.y - coll.contacts[0].point.y, coll.transform.position.x - coll.contacts[0].point.x) + ReflectAngle)
-        );
-    */
+        }    
     }
 
     override protected void UpdateCustom() //update
-    {
-        
-    }
-
-    protected override void ActionActivated()
     {        
-        base.ActionActivated();
-        
-        Breakable = false;
-
-        AudioInit._Inst.PlayOneShot(sound); //убедись, что не возникает многократных вызовов gameaction-а (ну, ты конечно услышишь)
     }
 
-    protected override void ActionDeactivated()
-    {
-        base.ActionDeactivated();
+    protected override void OnActionActivated()
+    {        
+        base.OnActionActivated();
+
+        AudioInit._Inst.PlayOneShot(sound); //если возникнет слишком много вызовов этого gameaction-а за секунду (подряд), Я ЭТО УСЛЫШУ
     }
 
     override public void RecieveInputFromPlayer() //input

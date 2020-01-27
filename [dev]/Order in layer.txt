@@ -1,9 +1,11 @@
-Wall - 20
+Wall - 22
+ WallMovable - 21
+Laser - 20
 Slow/Gravity Area - 19
 Player - 15 
  player dash target effect - 14
- player particles - 06
+ player particles - 08
 
 Item - 13
-CheckPoint - 06
+CheckPoint - 07
 BG Panel - 05

@@ -1,12 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class Item : MonoBehaviour 
 {
-    public AudioClip sound;
-    MyParticle part;
+    public AudioClip sound; //OnPickUp
+    //
+    MyParticle part; //pick-up vfx, starts disabled, since it kills the object when lifetime ends
     Collider2D cldr;
+
+    //public event Action OnPickUp;
+
 
 	void Start()
 	{
@@ -29,7 +32,6 @@ public class Item : MonoBehaviour
             //goal counter refresh
             LevelInit._Inst.AddPickItem();
             //Destroy(gameObject);
-
         }        
     }
 }

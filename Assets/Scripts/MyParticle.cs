@@ -21,6 +21,7 @@ public class MyParticle : MonoBehaviour
         if (Steps <= 0)
         {
             enabled = false;
+            Debug.LogErrorFormat("{0}, script MyParticle: incorrect steps number.", gameObject);
             return;
         }
 
@@ -42,7 +43,7 @@ public class MyParticle : MonoBehaviour
 		Steps--;
         if (Steps == 0)
         {
-            //enabled = false;
+            //gameObject.SetActive(false);
             Destroy(gameObject);
         }
 	}

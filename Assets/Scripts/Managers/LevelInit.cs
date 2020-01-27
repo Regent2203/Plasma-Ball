@@ -9,7 +9,9 @@ public class LevelInit : MonoBehaviour
     int LevelNumber { get; set; } //number of current level
     public int item_Picked { get; protected set; } = 0;
     public int item_Goal { get; protected set; } = 0;
-    
+
+    public CameraController MainCamera;
+    public PlayerController Player;
 
 
     void Awake()
@@ -19,18 +21,33 @@ public class LevelInit : MonoBehaviour
 
     void Start()
 	{
+        if (MainCamera == null)
+        {
+            Debug.LogWarning("Main camera is not set in LevelInit!");
+            MainCamera = Camera.main.GetComponent<CameraController>();            
+        }
+
+        if (Player == null)
+        {            
+            Debug.LogWarning("Player is not set in LevelInit!");
+            Player = GameObject.Find("/ObjectGrid").GetComponent<PlayerController>();
+        }
+
         LevelNumber = int.Parse(SceneManager.GetActiveScene().name.Substring(5,2));
 
         //TODO: load highscore from playerprefs?
         /*BestScore*/
 
         //starting the game
-        //check "menu_IngameMenu"
+        //It's not here anymore. Check "IngameMenu" file
         //GameInit._Inst.SetPause(true);
 
         //spawn player
-        CheckPoint.SpawnPlayer();
+        //CheckPoint.ActiveCP.StartCoroutine("SpawnPlayer", 0);
+        MainCamera.SetTarget(Player.gameObject); //TODO: возможно, стоит поместить в другое место.
+        iface_Health._Inst.Refresh();
     }
+
 
     //------------------------items------------------------------------
     public void AddPickItem()
@@ -52,7 +69,7 @@ public class LevelInit : MonoBehaviour
     //TODO: lose and respawn, more win conditions/goals (finish point, +limited in time, +destroy enemy plasma)
     void Victory()
     {
-        Time.timeScale = 0.3f;        
+        Time.timeScale = 0.4f;        
         GameInit._Inst.StartCoroutine("LoadStage", LevelNumber+1);
     }
 	

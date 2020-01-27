@@ -10,10 +10,10 @@ public class GameInit : Singleton<GameInit>
 
     void Start() 
 	{
-		DontDestroyOnLoad(this.gameObject);
+		DontDestroyOnLoad(gameObject);
 
         //force screen orientation
-        Screen.orientation = ScreenOrientation.Landscape;        
+        //Screen.orientation = ScreenOrientation.Landscape;        
 	}  
 
     public void SetPause(bool B)
@@ -24,14 +24,13 @@ public class GameInit : Singleton<GameInit>
             Time.timeScale = 1;
 
         Paused = B;
-    }
-        
+    }        
 
     public IEnumerator LoadStage(int N)
     {
         yield return new WaitForSecondsRealtime(1.5f);
         
-        if (N > 1) /*zaglushka - predel sozdannyh mnoyu urovnei*/
+        if (N > 9) /*zaglushka - predel sozdannyh mnoyu urovnei*/
         {
             Time.timeScale = 1;
             LoadMenuScene();

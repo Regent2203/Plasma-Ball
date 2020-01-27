@@ -11,8 +11,8 @@ public class SlowArea : MyTile
     {
         if (coll.tag == "PlayerCenterPoint")
         {
-            Player pl = coll.GetComponentInParent<Player>();
-            pl.k_Slow *= SlowRate;            
+            //PlayerController pl = 
+            coll.transform.parent.GetComponent<PlayerController>().k_Slow *= SlowRate;            
         }     
     }
     
@@ -20,8 +20,8 @@ public class SlowArea : MyTile
     {
         if (coll.tag == "PlayerCenterPoint")
         {
-            Player pl = coll.GetComponentInParent<Player>();
-            pl.k_Slow /= SlowRate;
+            //PlayerController pl = 
+            coll.transform.parent.GetComponent<PlayerController>().k_Slow /= SlowRate;
         }
     }
 }

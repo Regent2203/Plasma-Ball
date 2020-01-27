@@ -70,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 7
   m_Sprite: {fileID: 21300000, guid: aff513944a76c724f84ab378952cd03b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -95,10 +95,10 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.41, y: 1.41}
+  m_Offset: {x: -1.41, y: -1.41}
   m_SpriteTilingProperty:
-    border: {x: 2.3, y: 2.3, z: 0.52, w: 0.52}
-    pivot: {x: 0, y: 0}
+    border: {x: 0.26, y: 0.26, z: 0.26, w: 0.26}
+    pivot: {x: 1, y: 1}
     oldSize: {x: 5.12, y: 5.12}
     newSize: {x: 2.82, y: 2.82}
     adaptiveTilingThreshold: 0.5
@@ -106,7 +106,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.22, y: 2.22}
+  m_Size: {x: 2.3, y: 2.3}
   m_EdgeRadius: 0
 --- !u!114 &114916087617830006
 MonoBehaviour:
@@ -120,8 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f27fc0c44e3db44a351acc5f64b793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerPrefab: {fileID: 4392063268235162329, guid: b49f3900c1432944bbfcb0337b786b01,
-    type: 3}
   spr_off: {fileID: 21300000, guid: 7a0c128ac4f31b244926a4f09a5a6894, type: 3}
   spr_on: {fileID: 21300000, guid: aff513944a76c724f84ab378952cd03b, type: 3}
   IsActive: 0

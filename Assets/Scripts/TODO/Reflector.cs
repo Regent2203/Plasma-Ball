@@ -23,7 +23,7 @@ public class Reflector : MyTile
         //creating own material for unique bouncy coefficient
         if (DefaultMaterial.bounciness != coef_Bounce)
         {
-            mat = PhysicsMaterial2D.Instantiate(DefaultMaterial);
+            mat = Instantiate(DefaultMaterial);
             mat.bounciness = coef_Bounce;
             rb.sharedMaterial = mat;
         }
@@ -42,10 +42,10 @@ public class Reflector : MyTile
     void ApplyReflect(Collision2D coll)
     {
         Rigidbody2D crb = coll.gameObject.GetComponent<Rigidbody2D>();
-        Player pl = coll.gameObject.GetComponent<Player>();
+        PlayerController pl = coll.gameObject.GetComponent<PlayerController>();
 
         //Debug.Log(coll.contacts[0].point);
-
+     
         Vector2 refl = new Vector2
             (
                 ReflectPower * Mathf.Cos(Mathf.Atan2(coll.transform.position.y - coll.contacts[0].point.y, coll.transform.position.x - coll.contacts[0].point.x) + ReflectAngle),

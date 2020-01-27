@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public enum GAtype //GameActionType
@@ -8,24 +7,27 @@ public enum GAtype //GameActionType
     Unassigned = -1, Free = 0, Dash = 1, Reflected = 2
 }
 
-[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(PlayerController))]
 public abstract class GameAction : MonoBehaviour
 {
     public GAtype Type { get; protected set; } = GAtype.Unassigned;
     
-    protected Player pl;
-    protected Rigidbody2D rb;
-    protected ParticleSystem ps;
+    protected PlayerController pl;
+    protected Transform tr;
+    //protected Rigidbody2D rb;
+    //protected ParticleSystem ps;
 
     //NIY
     //int CurCharges, MaxCharges;
     //int CurCooldown, MaxCooldown;
 
     public bool Breakable { get; protected set; } = false; //can be stopped/overriden while performing
-    public bool IsActive { get; protected set; } = false;
-    //public int delay; //one action can add delay to another action(s)
+    public bool IsActive { get; protected set; } = false; //only current action is active
+    //public int delay { get; protected set; } //one action can add delay to another action(s)
     protected int ac = -1, ac_max = -1; //action counter (timer)
-	
+
+    
+
 
 
     protected abstract void Awake(); //Type = ThisActionType; 
@@ -37,11 +39,12 @@ public abstract class GameAction : MonoBehaviour
             Debug.LogErrorFormat("{0}: has gameaction '{1}' with unassigned type.", gameObject, this.GetType());
             enabled = false;
             return;
-        }
+        }        
 
-        pl = GetComponent<Player>();
-        rb = GetComponent<Rigidbody2D>();
-        ps = GetComponent<ParticleSystem>();        
+        pl = GetComponent<PlayerController>();
+        tr = transform;
+        //rb = GetComponent<Rigidbody2D>();
+        //ps = GetComponent<ParticleSystem>();        
         
         StartCustom(); //custom for each action
 	}    
@@ -62,13 +65,14 @@ public abstract class GameAction : MonoBehaviour
         if (IsActive)
             UpdateCustom();
     }
-
+        
     protected abstract void StartCustom();
     protected abstract void ProcessCustom();
     protected abstract void UpdateCustom();
+    //protected delegate void UpdateCustom();
     public abstract void RecieveInputFromPlayer();
 
-    protected virtual void ActionActivated() //характерно для большинства
+    protected virtual void OnActionActivated() //характерно для большинства
     {
         ac = ac_max;
         /*
@@ -78,7 +82,7 @@ public abstract class GameAction : MonoBehaviour
         */
     }
 
-    protected virtual void ActionDeactivated() //характерно для большинства
+    protected virtual void OnActionDeactivated() //характерно для большинства
     {
         ac = -1;
     }
@@ -87,22 +91,19 @@ public abstract class GameAction : MonoBehaviour
     public void Activate()
     {
         IsActive = true;
-        ActionActivated();
+        OnActionActivated();
     }
     public void Deactivate()
     {
         IsActive = false;
-        ActionDeactivated();
+        OnActionDeactivated();
     }
-
     
-
 
 	//if action is not on cooldown and can be performed
     /*
 	public bool CheckAvailable()
-	{
-        
+	{        
         if (delay > 0)
             return false;
 
@@ -112,7 +113,7 @@ public abstract class GameAction : MonoBehaviour
     }
     */
 
-	//doing all that "add +1 to action counter"
+	//doing all that "add +1 to action counter" stuff
 	protected void ProcessBasicParameters ()
 	{
         /*

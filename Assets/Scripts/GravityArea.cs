@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GravityArea : MyTile 
 {
@@ -11,8 +9,8 @@ public class GravityArea : MyTile
     {
         if (coll.tag == "PlayerCenterPoint")
         {
-            Player pl = coll.GetComponentInParent<Player>();
-            pl.ex_Grav += Force;
+            //PlayerController pl = 
+            coll.transform.parent.GetComponent<PlayerController>().ex_Grav += Force;
         }
     }
 
@@ -20,8 +18,8 @@ public class GravityArea : MyTile
     {
         if (coll.tag == "PlayerCenterPoint")
         {
-            Player pl = coll.GetComponentInParent<Player>();
-            pl.ex_Grav -= Force;
+            //PlayerController pl = 
+            coll.transform.parent.GetComponent<PlayerController>().ex_Grav -= Force;
         }
     }
 }

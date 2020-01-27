@@ -1,26 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class ActionDash : GameAction
 {
     const GAtype ThisActionType = GAtype.Dash;
     //
-    public GameObject eff_touch1, eff_touch2; //onmouseclick effects
+    public GameObject eff_touch1, eff_touch2; //onmouseclick visual effects
     public float BaseSpeed = 0.61f;    
-    Vector2 StartPos, EndPos;
-    
     [Header ("Audio")]    
     public AudioClip sound;
+
+    private Vector2 StartPos, EndPos;
+
 
 
     override protected void Awake()
     {
         Type = ThisActionType;
     }
-
-
 
     override protected void StartCustom() //start
     {
@@ -68,15 +65,13 @@ public class ActionDash : GameAction
 
     override protected void UpdateCustom() //update
     {
-        RecieveInputFromPlayer(); //multi-dash
+        RecieveInputFromPlayer(); //used for multi-dash
     }
 
-    protected override void ActionActivated()
+    protected override void OnActionActivated()
     {
-        base.ActionActivated();
-        
-        Breakable = false;
-        
+        base.OnActionActivated();
+                
         //calculate velocity to reach the target                                        
         pl.Speed = (EndPos - StartPos) * 0.07369f; //0,0736892435207222608922970096905f  = BaseSpeed / (StartPos - rb.position).magnitude
 
@@ -90,22 +85,18 @@ public class ActionDash : GameAction
         }
         else
             Instantiate(eff_touch1, EndPos, Quaternion.identity);
-        
+
+        Breakable = false;
         AudioInit._Inst.PlayOneShot(sound);
     }
 
-    protected override void ActionDeactivated()
-    {
-        base.ActionDeactivated();
-    }
-
-
     override public void RecieveInputFromPlayer() //input
     {
+        /*
         #if UNITY_ANDROID || UNITY_IOS
         if (Input.touchCount > 0)
         {
-            if (Input.touches[0].phase == TouchPhase.Began)
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
                 //здесь мы исключаем нажатие на кнопки интерфейса (на кнопку "меню" в правом верхнем углу)
                 List<RaycastResult> results = new List<RaycastResult>();
@@ -117,21 +108,21 @@ public class ActionDash : GameAction
                 {                    
                     StartPos = rb.position;
                     EndPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-                    pl.PerformNewAction(Type);
+                    pl.PerformNewAction(this);
                 }
             }
         }
         #endif
-
+        */
         #if UNITY_EDITOR || UNITY_WEBGL
         if (Input.GetMouseButtonDown(0))
         {
             //здесь мы исключаем нажатие на кнопки интерфейса (на кнопку "меню" в правом верхнем углу)
             if (!EventSystem.current.IsPointerOverGameObject())
             {
-                StartPos = rb.position;
-                EndPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                pl.PerformNewAction(Type);
+                StartPos = tr.position;
+                EndPos = LevelInit._Inst.MainCamera.cam.ScreenToWorldPoint(Input.mousePosition);                
+                pl.PerformNewAction(this);
             }
         }
         #endif
